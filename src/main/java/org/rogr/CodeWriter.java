@@ -3,6 +3,15 @@ package org.rogr;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.UUID;
+
+/*
+* SP stored in RAM[0]
+* Stack base address is 256
+*
+*
+*
+* */
 
 public class CodeWriter {
     private final BufferedWriter writer;
@@ -14,29 +23,18 @@ public class CodeWriter {
             throw new IllegalArgumentException("Command type must be C_ARITHMETIC");
         }
         String cmd = command.getCommand();
-        ArithmeticType arithmeticType = ArithmeticType.fromValue(cmd);
-        if(arithmeticType.equals(ArithmeticType.ADD)){
-            writer.write("add");
-        } else if (arithmeticType.equals(ArithmeticType.SUB)){
-            writer.write("sub");
-        } else if (arithmeticType.equals(ArithmeticType.NEG)){
-            writer.write("neg");
-        } else if (arithmeticType.equals(ArithmeticType.EQ)){
-            writer.write("eq");
-        } else if (arithmeticType.equals(ArithmeticType.GT)){
-            writer.write("gt");
-        } else if (arithmeticType.equals(ArithmeticType.LT)){
-            writer.write("lt");
-        } else if (arithmeticType.equals(ArithmeticType.AND)){
-            writer.write("and");
-        } else if (arithmeticType.equals(ArithmeticType.OR)){
-            writer.write("or");
-        } else if (arithmeticType.equals(ArithmeticType.NOT)){
-            writer.write("not");
+        writer.write("// Arithmetic cmd: " + cmd);
+        writer.newLine();
+        String translatedCmd = ArithmeticTranslator.COMMANDS.get(cmd.toLowerCase());
+
+        if(translatedCmd != null){
+            //Replace all occurrences of LABEL with a random UUID
+            translatedCmd = translatedCmd.replace(ArithmeticTranslator.LABEL, UUID.randomUUID().toString());
+            writer.write(translatedCmd);
+            writer.newLine();
         } else {
             throw new IllegalArgumentException("Illegal arithmetic command: " + cmd);
         }
-        writer.newLine();
     }
     public void writePushPop(Command command) throws IOException {
         if (command.getType().equals(CommandType.C_PUSH)){
