@@ -3,7 +3,6 @@ package org.rogr;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
 /*
 * SP stored in RAM[0]
@@ -25,11 +24,9 @@ public class CodeWriter {
         String cmd = command.getCommand();
         writer.write("// Arithmetic cmd: " + cmd);
         writer.newLine();
-        String translatedCmd = ArithmeticTranslator.COMMANDS.get(cmd.toLowerCase());
+        String translatedCmd = ArithmeticTranslator.get(cmd.toLowerCase());
 
         if(translatedCmd != null){
-            //Replace all occurrences of LABEL with a random UUID
-            translatedCmd = translatedCmd.replace(ArithmeticTranslator.LABEL, UUID.randomUUID().toString());
             writer.write(translatedCmd);
             writer.newLine();
         } else {
