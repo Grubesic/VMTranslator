@@ -22,7 +22,7 @@ public class MemoryAccessTranslator {
         };
     }
 
-    public static String translatePush(String segment, int index){
+    public static String translatePush(String segment, int index, String fileName){
         String asm;
         switch (segment) {
             case CONSTANT -> asm = "@" + index + "\n" +
@@ -46,7 +46,7 @@ public class MemoryAccessTranslator {
                     "M=D\n" +
                     "@SP\n" +
                     "M=M+1\n";
-            case STATIC -> asm = "@" + index + "\n" +
+            case STATIC -> asm = "@" + fileName + "." + index + "\n" +
                     "D=M\n" +
                     "@SP\n" +
                     "A=M\n" +
@@ -70,7 +70,7 @@ public class MemoryAccessTranslator {
         return asm;
     }
 
-    public static String translatePop(String segment, int index){
+    public static String translatePop(String segment, int index, String fileName){
         String asm;
         switch (segment) {
             case TEMP -> asm = "@SP\n" +
@@ -89,7 +89,7 @@ public class MemoryAccessTranslator {
                     "M=M-1\n" +
                     "A=M\n" +
                     "D=M\n" +
-                    "@" + index + "\n" +
+                     "@" + fileName + "." + index +  "\n" +
                     "M=D\n";
             default -> {
                 String seg = getSegment(segment);

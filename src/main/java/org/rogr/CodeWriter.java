@@ -6,6 +6,7 @@ import org.rogr.translator.ArithmeticTranslator;
 import org.rogr.translator.MemoryAccessTranslator;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -19,8 +20,13 @@ import java.io.IOException;
 
 public class CodeWriter {
     private final BufferedWriter writer;
+
+    private final String fileName;
+
     public CodeWriter(String filePath) throws IOException {
-        writer = new BufferedWriter(new FileWriter(filePath));
+        File file = new File(filePath);
+        writer = new BufferedWriter(new FileWriter(file));
+        fileName = file.getName();
     }
     public void writeArithmetic(Command command) throws IOException {
         if (!command.getType().equals(CommandType.C_ARITHMETIC)){
@@ -45,9 +51,9 @@ public class CodeWriter {
         writer.write("// " + command.getType() + " " + command.getArg1() + " " + command.getArg2());
         writer.newLine();
         if (command.getType().equals(CommandType.C_PUSH)) {
-            translatedCommand = MemoryAccessTranslator.translatePush(command.getArg1(), command.getArg2());
+            translatedCommand = MemoryAccessTranslator.translatePush(command.getArg1(), command.getArg2(), fileName);
         } else if (command.getType().equals(CommandType.C_POP)) {
-            translatedCommand = MemoryAccessTranslator.translatePop(command.getArg1(), command.getArg2());
+            translatedCommand = MemoryAccessTranslator.translatePop(command.getArg1(), command.getArg2(), fileName);
         } else {
             throw new IllegalArgumentException("Command type must be C_PUSH or C_POP");
         }
