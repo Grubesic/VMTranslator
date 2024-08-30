@@ -1,4 +1,4 @@
-package org.rogr;
+package org.rogr.model;
 
 public enum CommandType {
     C_ARITHMETIC,

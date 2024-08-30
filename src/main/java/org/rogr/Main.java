@@ -1,7 +1,8 @@
 package org.rogr;
 
+import org.rogr.model.CommandType;
+
 import java.io.IOException;
-import java.io.Writer;
 
 public class Main {
     private static final String art = " _    _ _______      _______  ______ _______ __   _ _______        _______ _______  _____   ______\n" +
@@ -25,7 +26,6 @@ public class Main {
             throw new RuntimeException(e);
         }
     }
-
     public void run(String inputFile) throws IOException {
         Parser parser = null;
         CodeWriter writer = null;
@@ -33,10 +33,15 @@ public class Main {
             parser = new Parser(inputFile);
             String outputFilePath = parser.getInputFilePath().replaceAll(".vm", ".asm");
             writer = new CodeWriter(outputFilePath);
-            while (parser.hasMoreCommands()){
+
+            while (parser.hasMoreCommands()) {
                 parser.advance();
-                if(parser.commandType().equals(CommandType.C_ARITHMETIC)){
-                    writer.writeArithmetic(parser.getCurrentCommand());
+                if (parser.hasMoreCommands()) {
+                    if (parser.commandType().equals(CommandType.C_ARITHMETIC)) {
+                        writer.writeArithmetic(parser.getCurrentCommand());
+                    } else if (parser.commandType().equals(CommandType.C_PUSH) || parser.commandType().equals(CommandType.C_POP)) {
+                        writer.writePushPop(parser.getCurrentCommand());
+                    }
                 }
             }
         } catch (IOException e) {

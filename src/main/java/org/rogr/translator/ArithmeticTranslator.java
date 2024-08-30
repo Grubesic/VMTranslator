@@ -1,4 +1,4 @@
-package org.rogr;
+package org.rogr.translator;
 
 import java.util.Map;
 import java.util.UUID;
@@ -12,16 +12,24 @@ public class ArithmeticTranslator {
     private static final String EQ_KEY = "eq";
     private static final String GT_KEY = "gt";
     private static final String LT_KEY = "lt";
+
+    private static final String ADD_KEY = "add";
+    private static final String SUB_KEY = "sub";
+    private static final String NEG_KEY = "neg";
+    private static final String AND_KEY = "and";
+    private static final String OR_KEY = "or";
+    private static final String NOT_KEY = "not";
+
     public static final Map<String, String> COMMANDS = Map.of(
-            "add", translateAdd(),
-            "sub", translateSub(),
-            "neg", translateNeg(),
+            ADD_KEY, translateAdd(),
+            SUB_KEY, translateSub(),
+            NEG_KEY, translateNeg(),
             EQ_KEY, translateEq(),
             GT_KEY, translateGt(),
             LT_KEY, translateLt(),
-            "and", translateAnd(),
-            "or", translateOr(),
-            "not", translateNot(),
+            AND_KEY, translateAnd(),
+            OR_KEY, translateOr(),
+            NOT_KEY, translateNot(),
             MULT_KEY, translateMult()
     );
 
@@ -134,7 +142,6 @@ public class ArithmeticTranslator {
     }
 
     private static String translateMult() {
-        //TODO: Figure out labels that work more generically
         return """
                 @SP
                 M=M-1
@@ -151,12 +158,15 @@ public class ArithmeticTranslator {
                 M=D
                 @sum
                 M=D // load x into sum so that we can add it to itself i times
-                   
-                (LOOP)
+                """+
+                "("+LABEL_1+")" + "\n"+
+                """
                 @i
                 M=M - 1
                 D=M
-                @FINAL
+                """+
+                "@"+LABEL_2 + "\n"+
+                """
                 D;JEQ
                 @sum
                 D=M
@@ -164,10 +174,11 @@ public class ArithmeticTranslator {
                 D=D+M
                 @sum
                 M=D
-                                
-                @LOOP
-                0;JMP
-                (FINAL)
+                """ +
+                "@" + LABEL_1 + "\n" +
+                "0;JMP" + "\n" +
+                "("+ LABEL_2+ ")" + "\n" +
+                """
                 @sum
                 D=M
                 @SP
