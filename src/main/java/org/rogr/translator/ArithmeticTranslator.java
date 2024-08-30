@@ -33,7 +33,7 @@ public class ArithmeticTranslator {
             MULT_KEY, translateMult()
     );
 
-    public static String translateAdd() {
+    private static String translateAdd() {
         return """
                 @SP
                 M=M-1
@@ -44,7 +44,7 @@ public class ArithmeticTranslator {
                 """;
     }
 
-    public static String translateSub() {
+    private static String translateSub() {
         return """
                 @SP
                 M=M-1
@@ -55,7 +55,7 @@ public class ArithmeticTranslator {
                 """;
     }
 
-    public static String translateNeg() {
+    private static String translateNeg() {
         return """
                 @SP
                 A=M-1
@@ -63,7 +63,7 @@ public class ArithmeticTranslator {
                 """;
     }
 
-    public static String translateEq() {
+    private static String translateEq() {
         return "@SP" + "\n" +
                 "M=M-1" + "\n" +
                 "A=M" + "\n" +
@@ -79,7 +79,7 @@ public class ArithmeticTranslator {
                 "(" + LABEL + ")" + "\n";
     }
 
-    public static String translateGt() {
+    private static String translateGt() {
         return "@SP" + "\n" +
                 "M=M-1" + "\n" +
                 "A=M" + "\n" +
@@ -95,7 +95,7 @@ public class ArithmeticTranslator {
                 "(" + LABEL + ")" + "\n";
     }
 
-    public static String translateLt() {
+    private static String translateLt() {
         return "@SP" + "\n" +
                 "M=M-1" + "\n" +
                 "A=M" + "\n" +
@@ -142,6 +142,7 @@ public class ArithmeticTranslator {
     }
 
     private static String translateMult() {
+        // TODO: Not tested yet
         return """
                 @SP
                 M=M-1

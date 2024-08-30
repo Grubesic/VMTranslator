@@ -15,6 +15,11 @@ public class Command {
         this.arg1 = arg1;
         this.arg2 = arg2;
     }
+    public Command(String command, CommandType type, String arg1) {
+        this.command = command;
+        this.type = type;
+        this.arg1 = arg1;
+    }
     public String getCommand() {
         return command;
     }

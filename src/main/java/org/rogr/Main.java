@@ -41,6 +41,10 @@ public class Main {
                         writer.writeArithmetic(parser.getCurrentCommand());
                     } else if (parser.commandType().equals(CommandType.C_PUSH) || parser.commandType().equals(CommandType.C_POP)) {
                         writer.writePushPop(parser.getCurrentCommand());
+                    } else if (parser.commandType().equals(CommandType.C_LABEL) ||
+                            parser.commandType().equals(CommandType.C_GOTO) ||
+                            parser.commandType().equals(CommandType.C_IF)) {
+                        writer.writeBranching(parser.getCurrentCommand());
                     }
                 }
             }

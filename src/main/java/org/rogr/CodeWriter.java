@@ -3,6 +3,7 @@ package org.rogr;
 import org.rogr.model.Command;
 import org.rogr.model.CommandType;
 import org.rogr.translator.ArithmeticTranslator;
+import org.rogr.translator.BranchingTranslator;
 import org.rogr.translator.MemoryAccessTranslator;
 
 import java.io.BufferedWriter;
@@ -62,5 +63,14 @@ public class CodeWriter {
     }
     public void close() throws IOException {
         writer.close();
+    }
+
+    public void writeBranching(Command command) throws IOException {
+        writer.write("// " + command.getType() + " " + command.getArg1());
+        writer.newLine();
+
+        String translatedCmd = BranchingTranslator.translate(command.getCommand(), command.getArg1());
+        writer.write(translatedCmd);
+        writer.newLine();
     }
 }

@@ -3,6 +3,7 @@ package org.rogr;
 import org.rogr.model.Command;
 import org.rogr.model.CommandType;
 import org.rogr.translator.ArithmeticTranslator;
+import org.rogr.translator.BranchingTranslator;
 import org.rogr.translator.MemoryAccessTranslator;
 
 import java.io.*;
@@ -34,6 +35,8 @@ public class Parser {
                 advance();
                 return;
             }
+            line = removeUnwanted(line);
+
             if (isArithmeticCommand(line)) {
                 currentCommand = new Command(line, CommandType.C_ARITHMETIC);
             } else {
@@ -51,7 +54,19 @@ public class Parser {
                     } else if (operation.equalsIgnoreCase(MemoryAccessTranslator.POP)) {
                         currentCommand = new Command(operation, CommandType.C_POP, segment, index);
                     } else {
-                        throw new IllegalArgumentException("Invalid command format");
+                        throw new IllegalArgumentException("Invalid memory access command format");
+                    }
+                } else if (parts.length == 2) {
+                    String operation = parts[0];
+                    if (operation.equalsIgnoreCase(BranchingTranslator.GOTO)) {
+                        currentCommand = new Command(operation, CommandType.C_GOTO, parts[1]);
+                    } else if (operation.equalsIgnoreCase(BranchingTranslator.IF_GOTO)) {
+                        currentCommand = new Command(operation, CommandType.C_IF, parts[1]);
+                    } else if (operation.equalsIgnoreCase(BranchingTranslator.LABEL_COMMAND)) {
+                        currentCommand = new Command(operation, CommandType.C_LABEL, parts[1]);
+
+                    } else {
+                        throw new IllegalArgumentException("Invalid branching command format");
                     }
                 } else {
                     throw new IllegalArgumentException("Invalid command format");
@@ -60,6 +75,13 @@ public class Parser {
         } else {
             hasMoreCommands = false;
         }
+    }
+
+    private String removeUnwanted(String line) {
+        if (line.contains("//")) {
+            return line.substring(0, line.indexOf("//")).trim();
+        }
+        return line.trim();
     }
 
     public CommandType commandType() {
